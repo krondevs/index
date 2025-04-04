@@ -32,6 +32,9 @@ Catálogo oficial de servicios seguros accesibles a través de la red Tor, propo
 - Descarga segura y privada
 - Cifrado de archivos durante la transferencia
 
+### 5. 📁 Explorador de Cadena de bloques RED KRON
+- 🔗 Dirección Onion: [`http://scflzt6yonkohedehfd2mb23szqjpq3tufx4mvklaahyc5zc4e4xttqd.onion`](http://scflzt6yonkohedehfd2mb23szqjpq3tufx4mvklaahyc5zc4e4xttqd.onion)
+
 ## 🌐 Cómo Acceder
 
 1. Descargar [Navegador Tor](https://www.torproject.org/download/)
