@@ -35,6 +35,9 @@ Catálogo oficial de servicios seguros accesibles a través de la red Tor, propo
 ### 5. 📁 Explorador de Cadena de bloques RED KRON
 - 🔗 Dirección Onion: [`http://scflzt6yonkohedehfd2mb23szqjpq3tufx4mvklaahyc5zc4e4xttqd.onion`](http://scflzt6yonkohedehfd2mb23szqjpq3tufx4mvklaahyc5zc4e4xttqd.onion)
 
+### 6. 📁 Memos
+- 🔗 Dirección Onion: [`http://pdozglibaix4y27tmcxqtuygi2ef4wsfojxnyr5ce4mbcisx6gozveqd.onion/`](http://pdozglibaix4y27tmcxqtuygi2ef4wsfojxnyr5ce4mbcisx6gozveqd.onion/)
+
 ## 🌐 Cómo Acceder
 
 1. Descargar [Navegador Tor](https://www.torproject.org/download/)
