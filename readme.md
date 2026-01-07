@@ -38,6 +38,9 @@ Catálogo oficial de servicios seguros accesibles a través de la red Tor, propo
 ### 6. 📁 Memos
 - 🔗 Dirección Onion: [`http://pdozglibaix4y27tmcxqtuygi2ef4wsfojxnyr5ce4mbcisx6gozveqd.onion/`](http://pdozglibaix4y27tmcxqtuygi2ef4wsfojxnyr5ce4mbcisx6gozveqd.onion/)
 
+- ### 7. 📁 Chatcaribe
+- 🔗 Dirección Onion: [`http://5ctbelbkh4o7byibnalzswuhox24tpaboprzpflxhkrr6u7lse3wqayd.onion/`](http://5ctbelbkh4o7byibnalzswuhox24tpaboprzpflxhkrr6u7lse3wqayd.onion/)
+
 ## 🌐 Cómo Acceder
 
 1. Descargar [Navegador Tor](https://www.torproject.org/download/)
