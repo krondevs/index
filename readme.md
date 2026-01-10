@@ -41,6 +41,9 @@ Catálogo oficial de servicios seguros accesibles a través de la red Tor, propo
 - ### 7. 📁 Chatcaribe
 - 🔗 Dirección Onion: [`http://5ctbelbkh4o7byibnalzswuhox24tpaboprzpflxhkrr6u7lse3wqayd.onion/`](http://5ctbelbkh4o7byibnalzswuhox24tpaboprzpflxhkrr6u7lse3wqayd.onion/)
 
+- ### 8. 📁 Ollama Ia
+- 🔗 Dirección Onion: [`http://rfjhbp7y2wyajbvl7vqn6vyaitg6johfospkdl423e36h22a3cyytsqd.onion/`](http://rfjhbp7y2wyajbvl7vqn6vyaitg6johfospkdl423e36h22a3cyytsqd.onion/)
+
 ## 🌐 Cómo Acceder
 
 1. Descargar [Navegador Tor](https://www.torproject.org/download/)
