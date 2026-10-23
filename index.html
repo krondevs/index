@@ -1,84 +1,442 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>Servicios Tor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light">
+<title>Índice Onion · Servicios privados</title>
+<meta name="description" content="Directorio de servicios internos accesibles únicamente a través de la red Tor.">
 <style>
-  body{font-family:Arial,Helvetica,sans-serif;background:#111;color:#eee;margin:0;padding:20px;}
-  h1,h2{color:#ff5722;}
-  .service{border-bottom:1px solid #444;padding:15px 0;}
-  a{color:#4fc3f7;text-decoration:none;}
-  a:hover{text-decoration:underline;}
+  :root{
+    --paper:#e8ece5;
+    --paper-2:#f3f6f1;
+    --ink:#12241d;
+    --muted:#4b5b52;
+    --line:#c2ccc0;
+    --accent:#c4461f;
+    --accent-ink:#9c3416;
+    --teal:#0b5f57;
+    --display:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:"Avenir Next",Avenir,"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    --mono:"SFMono-Regular","Cascadia Mono","Roboto Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --grid:rgba(18,36,29,.055);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    border-top:4px solid var(--accent);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.5;
+    background-color:var(--paper);
+    background-image:
+      linear-gradient(var(--grid) 1px,transparent 1px),
+      linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:32px 32px;
+    background-position:-1px -1px;
+  }
+  ::selection{background:var(--accent);color:var(--paper-2)}
+  a{color:inherit}
+  .wrap{width:min(1120px,100% - 2.5rem);margin-inline:auto}
+
+  .masthead{
+    display:grid;
+    grid-template-columns:minmax(0,1.45fr) minmax(260px,.55fr);
+    gap:clamp(2rem,5vw,5rem);
+    align-items:end;
+    padding-block:clamp(2.5rem,6vw,5rem) clamp(1.75rem,4vw,3rem);
+  }
+
+  .eyebrow{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:.55rem;
+    margin:0 0 1.35rem;
+    font-family:var(--mono);
+    font-size:.7rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .eyebrow .sep{color:var(--line)}
+  .onion{flex:none;color:var(--accent)}
+  .onion .ring{transform-origin:24px 24px;animation:spin 60s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  h1{
+    margin:0;
+    font-family:var(--display);
+    font-size:clamp(3.25rem,9vw,6.5rem);
+    font-weight:600;
+    line-height:.88;
+    letter-spacing:-.035em;
+  }
+  h1 em{font-style:italic;color:var(--accent-ink)}
+
+  .lede{
+    max-width:47ch;
+    margin:1.5rem 0 0;
+    font-size:clamp(1rem,1.6vw,1.12rem);
+    color:var(--muted);
+    text-wrap:pretty;
+  }
+  .mono-inline{
+    font-family:var(--mono);
+    font-size:.82em;
+    color:var(--ink);
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:.05em .35em;
+    white-space:nowrap;
+  }
+
+  .specs{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    margin:0;
+    border:1px solid var(--line);
+    background:rgba(243,246,241,.55);
+  }
+  .specs > div{padding:.85rem 1rem}
+  .specs > div:nth-child(odd){border-right:1px solid var(--line)}
+  .specs > div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .specs dt{
+    font-family:var(--mono);
+    font-size:.62rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .specs dd{
+    margin:.15rem 0 0;
+    font-family:var(--mono);
+    font-size:1.05rem;
+    font-weight:600;
+    letter-spacing:.01em;
+  }
+
+  .section-head{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:.5rem 1.5rem;
+    padding-block:.7rem;
+    border-top:1px solid var(--ink);
+    border-bottom:1px solid var(--line);
+  }
+  .section-head h2{
+    margin:0;
+    font-family:var(--mono);
+    font-size:.74rem;
+    font-weight:600;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+  }
+  .section-head p{
+    margin:0;
+    font-family:var(--mono);
+    font-size:.68rem;
+    letter-spacing:.06em;
+    color:var(--muted);
+  }
+
+  .directory{
+    list-style:none;
+    margin:0;
+    padding:0;
+  }
+  .directory > li{position:relative}
+  .directory > li + li{border-top:1px solid var(--line)}
+
+  .svc{
+    position:relative;
+    display:grid;
+    grid-template-columns:32px minmax(0,1fr) auto;
+    align-items:center;
+    gap:1rem;
+    padding:1.05rem .85rem 1.05rem 0;
+    text-decoration:none;
+    border-radius:2px;
+    transition:background-color .16s ease;
+  }
+  .svc::before{
+    content:"";
+    position:absolute;
+    left:15.5px;
+    top:0;
+    bottom:0;
+    width:1px;
+    background:var(--line);
+    z-index:0;
+  }
+  .directory > li:first-child .svc::before{top:50%}
+  .directory > li:last-child .svc::before{bottom:50%}
+
+  .node{
+    position:relative;
+    z-index:1;
+    justify-self:center;
+    width:10px;
+    height:10px;
+    border:1.5px solid var(--accent);
+    border-radius:50%;
+    background:var(--paper);
+    transition:background-color .16s ease,box-shadow .16s ease,transform .16s ease;
+  }
+
+  .svc-main{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);
+    align-items:center;
+    gap:1.75rem;
+    min-width:0;
+  }
+  .svc-top{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    gap:.2rem .8rem;
+  }
+  .svc-name{
+    font-family:var(--display);
+    font-size:clamp(1.3rem,2.4vw,1.55rem);
+    font-weight:600;
+    letter-spacing:-.015em;
+  }
+  .svc-desc{
+    font-size:.78rem;
+    letter-spacing:.04em;
+    color:var(--muted);
+  }
+  .svc-addr{
+    display:block;
+    margin-top:0;
+    font-family:var(--mono);
+    font-size:.76rem;
+    color:var(--muted);
+    overflow-wrap:anywhere;
+    text-decoration:underline;
+    text-decoration-color:transparent;
+    text-underline-offset:3px;
+    transition:color .16s ease,text-decoration-color .16s ease;
+  }
+
+  .svc-open{
+    display:flex;
+    align-items:center;
+    gap:.45rem;
+    padding-left:1rem;
+    font-family:var(--mono);
+    font-size:.64rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--accent-ink);
+    white-space:nowrap;
+  }
+  .svc-open svg{
+    width:13px;
+    height:13px;
+    transition:transform .16s ease;
+  }
+
+  .svc:hover{background:var(--paper-2)}
+  .svc:hover .node{background:var(--accent);box-shadow:0 0 0 4px rgba(196,70,31,.14);transform:scale(1.1)}
+  .svc:hover .svc-addr{color:var(--ink);text-decoration-color:var(--accent)}
+  .svc:hover .svc-open svg{transform:translate(2px,-2px)}
+  .svc:focus-visible{outline:2px solid var(--accent);outline-offset:3px;background:var(--paper-2)}
+  .svc:focus-visible .node{background:var(--accent)}
+
+  .colophon{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    gap:.5rem 2rem;
+    margin-top:clamp(2rem,4vw,3.5rem);
+    padding-block:1.25rem 2.5rem;
+    border-top:1px solid var(--line);
+    font-family:var(--mono);
+    font-size:.66rem;
+    line-height:1.6;
+    letter-spacing:.04em;
+    color:var(--muted);
+  }
+  .colophon p{margin:0}
+  .colophon strong{font-weight:600;color:var(--ink)}
+
+  @media (max-width:900px){
+    .masthead{grid-template-columns:1fr;align-items:start;gap:2.25rem}
+    .specs{max-width:420px}
+    .svc-main{display:block}
+    .svc-addr{margin-top:.22rem}
+  }
+  @media (max-width:600px){
+    .wrap{width:calc(100% - 1.5rem)}
+    .svc{grid-template-columns:26px minmax(0,1fr) auto;gap:.75rem;padding-right:.25rem}
+    .svc::before{left:12.5px}
+    .svc-open span{display:none}
+    .svc-top{gap:.1rem}
+    .svc-desc{flex-basis:100%}
+    .svc-addr{font-size:.68rem}
+    .specs{max-width:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+  }
 </style>
 </head>
 <body>
+<main class="wrap">
 
-<h1>🌐 Servicios Tor</h1>
+  <header class="masthead">
+    <div>
+      <p class="eyebrow">
+        <svg class="onion" viewBox="0 0 48 48" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <circle class="ring" cx="24" cy="24" r="20" stroke-dasharray="1 5"/>
+          <circle cx="24" cy="24" r="13.5" opacity=".8"/>
+          <circle cx="24" cy="24" r="7"/>
+          <circle cx="24" cy="24" r="1.7" fill="currentColor" stroke="none"/>
+        </svg>
+        <span>Tor hidden services</span>
+        <span class="sep">/</span>
+        <span>índice privado</span>
+      </p>
+      <h1>Índice <em>Onion</em></h1>
+      <p class="lede">Siete servicios internos que solo resuelven dentro de la red Tor. Cada entrada abre su dirección <span class="mono-inline">.onion</span> en una pestaña nueva.</p>
+    </div>
 
-<p><strong>Catálogo oficial de servicios seguros accesibles a través de la red Tor, proporcionando acceso privado y anónimo a nuestras plataformas.</strong></p>
+    <dl class="specs" aria-label="Datos del directorio">
+      <div><dt>Endpoints</dt><dd>07</dd></div>
+      <div><dt>Red</dt><dd>Tor v3</dd></div>
+      <div><dt>Protocolo</dt><dd>HTTP</dd></div>
+      <div><dt>Acceso</dt><dd>Privado</dd></div>
+    </dl>
+  </header>
 
-<h2>🔒 Servicios Disponibles</h2>
+  <div class="section-head">
+    <h2>Directorio</h2>
+    <p>07 endpoints · enlaces en pestaña nueva</p>
+  </div>
 
-<div class="service">
-  <h3>🗄️ Almacenamiento en la Nube</h3>
-  <a href="http://shdo2l36w7wzrmutr2rwglhz5i3omkjldx2t6frzcmh4oyxtjxyijtqd.onion">http://shdo2l36w7wzrmutr2rwglhz5i3omkjldx2t6frzcmh4oyxtjxyijtqd.onion</a><br>
-  Plataforma de almacenamiento seguro con cifrado de extremo a extremo.
-</div>
+  <ul class="directory">
+    <li>
+      <a class="svc" href="http://cloudxlwmg6uhz4clvsgg3vkjrcy4kkmauy2rhb2ousuh23eqs5oosid.onion/" target="_blank" rel="noopener noreferrer" aria-label="Abrir Cloud en una pestaña nueva">
+        <span class="node" aria-hidden="true"></span>
+        <span class="svc-main">
+          <span class="svc-top">
+            <span class="svc-name">Cloud</span>
+            <span class="svc-desc">Archivos y descargas</span>
+          </span>
+          <span class="svc-addr">cloudxlwmg6uhz4clvsgg3vkjrcy4kkmauy2rhb2ousuh23eqs5oosid.onion</span>
+        </span>
+        <span class="svc-open" aria-hidden="true"><span>Abrir</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M6 4h6v6"/></svg>
+        </span>
+      </a>
+    </li>
+    <li>
+      <a class="svc" href="http://kpibicdacaegqftlof6ijtae3ajudxjqfflmpqmqmfzgschjamig6xqd.onion/" target="_blank" rel="noopener noreferrer" aria-label="Abrir KPI en una pestaña nueva">
+        <span class="node" aria-hidden="true"></span>
+        <span class="svc-main">
+          <span class="svc-top">
+            <span class="svc-name">KPI</span>
+            <span class="svc-desc">Tableros y métricas</span>
+          </span>
+          <span class="svc-addr">kpibicdacaegqftlof6ijtae3ajudxjqfflmpqmqmfzgschjamig6xqd.onion</span>
+        </span>
+        <span class="svc-open" aria-hidden="true"><span>Abrir</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M6 4h6v6"/></svg>
+        </span>
+      </a>
+    </li>
+    <li>
+      <a class="svc" href="http://msgn5ypakz33dxezfmtkeu7r76hdkw7lpd5nkwuqewf7ggvqr5e3c2qd.onion/" target="_blank" rel="noopener noreferrer" aria-label="Abrir Msg en una pestaña nueva">
+        <span class="node" aria-hidden="true"></span>
+        <span class="svc-main">
+          <span class="svc-top">
+            <span class="svc-name">Msg</span>
+            <span class="svc-desc">Mensajería y llamadas</span>
+          </span>
+          <span class="svc-addr">msgn5ypakz33dxezfmtkeu7r76hdkw7lpd5nkwuqewf7ggvqr5e3c2qd.onion</span>
+        </span>
+        <span class="svc-open" aria-hidden="true"><span>Abrir</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M6 4h6v6"/></svg>
+        </span>
+      </a>
+    </li>
+    <li>
+      <a class="svc" href="http://uploaz2upcqdisfsf2bfx5if4fdsepiydjc6dq4jgfutph7cluxvetad.onion/" target="_blank" rel="noopener noreferrer" aria-label="Abrir Upload en una pestaña nueva">
+        <span class="node" aria-hidden="true"></span>
+        <span class="svc-main">
+          <span class="svc-top">
+            <span class="svc-name">Upload</span>
+            <span class="svc-desc">Subida de video</span>
+          </span>
+          <span class="svc-addr">uploaz2upcqdisfsf2bfx5if4fdsepiydjc6dq4jgfutph7cluxvetad.onion</span>
+        </span>
+        <span class="svc-open" aria-hidden="true"><span>Abrir</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M6 4h6v6"/></svg>
+        </span>
+      </a>
+    </li>
+    <li>
+      <a class="svc" href="http://platf5hfhhi5gedrl3zz6sqpl653yu443xgokufne37bfw5vw5zy4uqd.onion/" target="_blank" rel="noopener noreferrer" aria-label="Abrir Platform en una pestaña nueva">
+        <span class="node" aria-hidden="true"></span>
+        <span class="svc-main">
+          <span class="svc-top">
+            <span class="svc-name">Platform</span>
+            <span class="svc-desc">Panel de la plataforma</span>
+          </span>
+          <span class="svc-addr">platf5hfhhi5gedrl3zz6sqpl653yu443xgokufne37bfw5vw5zy4uqd.onion</span>
+        </span>
+        <span class="svc-open" aria-hidden="true"><span>Abrir</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M6 4h6v6"/></svg>
+        </span>
+      </a>
+    </li>
+    <li>
+      <a class="svc" href="http://tgoehijbruamq76loqhmlrfnv3ysc6decibbgmmwhr6mfoq5avwzenid.onion/" target="_blank" rel="noopener noreferrer" aria-label="Abrir TG en una pestaña nueva">
+        <span class="node" aria-hidden="true"></span>
+        <span class="svc-main">
+          <span class="svc-top">
+            <span class="svc-name">TG</span>
+            <span class="svc-desc">Puente de Telegram</span>
+          </span>
+          <span class="svc-addr">tgoehijbruamq76loqhmlrfnv3ysc6decibbgmmwhr6mfoq5avwzenid.onion</span>
+        </span>
+        <span class="svc-open" aria-hidden="true"><span>Abrir</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M6 4h6v6"/></svg>
+        </span>
+      </a>
+    </li>
+    <li>
+      <a class="svc" href="http://whatsdqjbqjgn732xmezlwjizf5fvpta67h7fm4hg27ghmsbztj5jqad.onion/" target="_blank" rel="noopener noreferrer" aria-label="Abrir WhatsApp en una pestaña nueva">
+        <span class="node" aria-hidden="true"></span>
+        <span class="svc-main">
+          <span class="svc-top">
+            <span class="svc-name">WhatsApp</span>
+            <span class="svc-desc">Puente de mensajería</span>
+          </span>
+          <span class="svc-addr">whatsdqjbqjgn732xmezlwjizf5fvpta67h7fm4hg27ghmsbztj5jqad.onion</span>
+        </span>
+        <span class="svc-open" aria-hidden="true"><span>Abrir</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12 12 4M6 4h6v6"/></svg>
+        </span>
+      </a>
+    </li>
+  </ul>
 
-<div class="service">
-  <h3>💰 Wallet de Red Kron</h3>
-  <a href="http://knaczfkhnb4podt3326trn3g7uzgwruhagmhhhrkillctnuewtekxiqd.onion/">Dirección Onion</a><br>
-  Transacciones anónimas, soporte para múltiples criptomonedas, alto nivel de seguridad.
-</div>
+  <footer class="colophon">
+    <p><strong>Requiere Tor Browser</strong> o un proxy SOCKS con resolución de dominios .onion.</p>
+    <p>Índice generado 23.10.2026</p>
+  </footer>
 
-<div class="service">
-  <h3>💬 Servicio de Mensajería Instantánea</h3>
-  <a href="http://zt7hmzrk3u72nbqi4wzz6vs5kvrujhgtupksyhenlsseuusvnjpvjqqd.onion/">Dirección Onion</a><br>
-  Comunicación cifrada de extremo a extremo, sin registro de conversaciones.
-</div>
-
-<div class="service">
-  <h3>📁 Servicio de Compartición de Archivos</h3>
-  <a href="http://share35svnxehabrmt23qcb4azdi5ntbukvqb5psvu4ldywkgzhrgiyd.onion">Dirección Onion</a><br>
-  Enlaces públicos permanentes, almacenamiento anónimo, descarga segura y cifrado durante la transferencia.
-</div>
-
-<div class="service">
-  <h3>📁 Explorador de Cadena de bloques RED KRON</h3>
-  <a href="http://scflzt6yonkohedehfd2mb23szqjpq3tufx4mvklaahyc5zc4e4xttqd.onion">http://scflzt6yonkohedehfd2mb23szqjpq3tufx4mvklaahyc5zc4e4xttqd.onion</a><br>
-  Explorador completo y seguro.
-</div>
-
-<div class="service">
-  <h3>📁 Memos</h3>
-  <a href="http://pdozglibaix4y27tmcxqtuygi2ef4wsfojxnyr5ce4mbcisx6gozveqd.onion/">http://pdozglibaix4y27tmcxqtuygi2ef4wsfojxnyr5ce4mbcisx6gozveqd.onion/</a><br>
-  Red social para desarrolladores con calendario integrado.
-</div>
-
-
-<div class="service">
-  <h3>📁 CHATCARIBE</h3>
-  <a href="http://5ctbelbkh4o7byibnalzswuhox24tpaboprzpflxhkrr6u7lse3wqayd.onion/">http://5ctbelbkh4o7byibnalzswuhox24tpaboprzpflxhkrr6u7lse3wqayd.onion/</a><br>
-</div>
-
-<h2>🌐 Cómo Acceder</h2>
-<ol>
-  <li>Descargar e instalar el <strong>Tor Browser</strong>.</li>
-  <li>Abrir Tor Browser.</li>
-  <li>Copiar la dirección Onion del servicio deseado.</li>
-  <li>Pegarla en la barra de navegación.</li>
-</ol>
-
-<h2>🛡️ Recomendaciones de Seguridad</h2>
-<ul>
-  <li>Mantén el Tor Browser actualizado.</li>
-  <li>Usa una VPN adicional para mayor anonimato.</li>
-  <li>Verifica siempre la autenticidad del servicio.</li>
-  <li>Protege tus credenciales y claves privadas.</li>
-</ul>
-
-<h2>⚠️ Aviso Legal</h2>
-<p>Servicios exclusivos para usuarios autorizados. Prohibido cualquier uso indebido. Cumplimiento estricto de normas de privacidad.</p>
-
+</main>
 </body>
 </html>
